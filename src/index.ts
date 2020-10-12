@@ -16,7 +16,7 @@ app.post('/form', (req: any, res: any) => {
 
 app.get('/consult/:idTechnical/:week', (req: any, res: any) => {
   const { idTechnical, week } = req.params;
-  console.log(idTechnical, week)
+  //console.log(idTechnical, week)
   let historyTechnical = db.filter((service: any) => service.idTechnical.toString() === idTechnical.toString())
   let resConsult = calculateHours.calculate(historyTechnical);
   res.send(resConsult)

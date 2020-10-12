@@ -5,35 +5,41 @@ import { servInformationModel } from '../models/servInformation';
 
 export const calculateHours = {
     calculate: (historyTechnical: any) => {
-
-        const totalHoursDay = calculateHours.totalHours(historyTechnical);
+        let resultCalculations = [];
+        resultCalculations.push(calculateHours.totalHours(historyTechnical));
         const totalNightOverTime = calculateHours.HoursExtraNight(historyTechnical);
-        const totalSundaypurs = calculateHours.calcSundayOverTime(historyTechnical)
-        return totalHoursDay;
+        const totalSundayOverTime = calculateHours.calcSundayOverTime(historyTechnical)
+        return resultCalculations;
     },
 
     totalHours: (historyTechnical: any) => {
         let totaHours = 0;
-        return historyTechnical.map((registry: any) => {
+        let objectTotalHours = {};
+        historyTechnical.map((registry: any, index:any) => {
             const { dateInit, dateEnd } = registry
             const dateInitFormat = moment(dateInit, 'DD/MM/YYYY HH:mm:ss');
             const dateEndFormat = moment(dateEnd, 'DD/MM/YYYY HH:mm:ss');
             const hoursWorked = dateEndFormat.diff(dateInitFormat, 'hours');
             totaHours = totaHours + hoursWorked;
-            return hoursWorked;
+            let extraNormalHours = totaHours - 48;
+            if (historyTechnical.length -1 === index) {
+                objectTotalHours = {
+                    HoursWorkedWeek: totaHours,
+                    ExtraNormalHours: extraNormalHours,
+                }
+                //console.log(objectTotalHours);
+            }
         })
+        return objectTotalHours;
     },
-
     HoursExtraNight: (historyTechnical: any) => {
         return historyTechnical.map((registry: any) => {
             const { dateInit, dateEnd } = registry
-
             const dateInitFormat = moment(dateInit, 'DD/MM/YYYY HH:mm:ss');
             const dateEndFormat = moment(dateEnd, 'DD/MM/YYYY HH:mm:ss');
 
             const hourLimitInit = moment(dateInit, 'DD/MM/YYYY HH:mm:ss');
             const hourLimitEnd = moment(dateEnd, 'DD/MM/YYYY HH:mm:ss');
-
             hourLimitInit.set({
                 hour: '20',
                 minute: '00',
@@ -79,10 +85,9 @@ export const calculateHours = {
             const dateEndFormat = moment(dateEnd, 'DD/MM/YYYY HH:mm:ss');
             const dayOfTheWeek = moment(dateInitFormat).format('dddd');
             if (dayOfTheWeek === 'Sunday') {
-                console.log('es domingo');
                 hoursWorkedSunday = dateEndFormat.diff(dateInitFormat, 'hours');
+                //console.log(hoursWorkedSunday);
             }
-            console.log(hoursWorkedSunday);
             return hoursWorkedSunday;
         })
     }
