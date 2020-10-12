@@ -43,16 +43,29 @@ export const calculateHours = {
             const hoursAfter = dateEndFormat.isAfter(hourLimitInit);
             const hourBefore = dateInitFormat.isBefore(hourLimitEnd);
 
+            let totalDiffHoursAfter = 0;
+            let totalDifMinutesAfter = 0;
+            let totalDiffHoursBefore = 0;
+            let totalDifMinutesBefore = 0;
+
             if (hoursAfter) {
-                const totalDiff = dateEndFormat.diff(hourLimitInit, 'hours')
-                const minuteDiff = (dateEndFormat.diff(hourLimitInit, 'minutes') - (totalDiff * 60))
-                //console.log(totalDiff, minuteDiff);
+                totalDiffHoursAfter = dateEndFormat.diff(hourLimitInit, 'hours')
+                totalDifMinutesAfter = (dateEndFormat.diff(hourLimitInit, 'minutes') - (totalDiffHoursAfter * 60))
             }
             if (hourBefore) {
-                const totalDiff = dateInitFormat.diff(hourLimitEnd, 'hours')
-                const minuteDiff = (dateInitFormat.diff(hourLimitEnd, 'minutes') - (totalDiff * 60))
-                console.log(totalDiff, minuteDiff);
+                totalDiffHoursBefore = (dateInitFormat.diff(hourLimitEnd, 'hours'))
+                ? ((dateInitFormat.diff(hourLimitEnd, 'hours')) * -1)
+                : (dateInitFormat.diff(hourLimitEnd, 'hours'));
+
+                totalDifMinutesBefore = (dateInitFormat.diff(hourLimitEnd, 'minutes') - (totalDiffHoursBefore * 60))
+                ? (((dateInitFormat.diff(hourLimitEnd, 'minutes')) * -1) - (totalDiffHoursBefore * 60))
+                : ((dateInitFormat.diff(hourLimitEnd, 'minutes')- (totalDiffHoursBefore * 60)));
+
             }
+            let totalHours = totalDiffHoursAfter + totalDiffHoursBefore;
+            let totalMinutes = totalDifMinutesAfter + totalDifMinutesBefore;
+            console.log(totalHours,totalMinutes );
+            
         })
     }
 
