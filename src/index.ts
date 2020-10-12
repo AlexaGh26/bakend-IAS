@@ -14,11 +14,11 @@ app.post('/form', (req: any, res: any) => {
   save.saveNewService( req , res)
 })
 
-app.get('/consult/:idTechnical/:week', async (req: any, res: any) => {
+app.get('/consult/:idTechnical/:week', (req: any, res: any) => {
   const { idTechnical, week } = req.params;
   console.log(idTechnical, week)
   let historyTechnical = db.filter((service: any) => service.idTechnical.toString() === idTechnical.toString())
-  let resConsult = await calculateHours.calculate(historyTechnical);
+  let resConsult = calculateHours.calculate(historyTechnical);
   res.send(resConsult)
 })
 
