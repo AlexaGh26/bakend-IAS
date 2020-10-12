@@ -7,17 +7,19 @@ export const calculateHours = {
     calculate: (historyTechnical: any) => {
 
         const totalHoursDay = calculateHours.totalHours(historyTechnical);
-        const totalHoursExtraNight = calculateHours.HoursExtraNight(historyTechnical);
+        const totalNightOverTime = calculateHours.HoursExtraNight(historyTechnical);
+        const totalSundaypurs = calculateHours.calcSundayOverTime(historyTechnical)
         return totalHoursDay;
     },
 
     totalHours: (historyTechnical: any) => {
-
+        let totaHours = 0;
         return historyTechnical.map((registry: any) => {
             const { dateInit, dateEnd } = registry
             const dateInitFormat = moment(dateInit, 'DD/MM/YYYY HH:mm:ss');
             const dateEndFormat = moment(dateEnd, 'DD/MM/YYYY HH:mm:ss');
             const hoursWorked = dateEndFormat.diff(dateInitFormat, 'hours');
+            totaHours = totaHours + hoursWorked;
             return hoursWorked;
         })
     },
@@ -54,18 +56,34 @@ export const calculateHours = {
             }
             if (hourBefore) {
                 totalDiffHoursBefore = (dateInitFormat.diff(hourLimitEnd, 'hours'))
-                ? ((dateInitFormat.diff(hourLimitEnd, 'hours')) * -1)
-                : (dateInitFormat.diff(hourLimitEnd, 'hours'));
+                    ? ((dateInitFormat.diff(hourLimitEnd, 'hours')) * -1)
+                    : (dateInitFormat.diff(hourLimitEnd, 'hours'));
 
                 totalDifMinutesBefore = (dateInitFormat.diff(hourLimitEnd, 'minutes') - (totalDiffHoursBefore * 60))
-                ? (((dateInitFormat.diff(hourLimitEnd, 'minutes')) * -1) - (totalDiffHoursBefore * 60))
-                : ((dateInitFormat.diff(hourLimitEnd, 'minutes')- (totalDiffHoursBefore * 60)));
+                    ? (((dateInitFormat.diff(hourLimitEnd, 'minutes')) * -1) - (totalDiffHoursBefore * 60))
+                    : ((dateInitFormat.diff(hourLimitEnd, 'minutes') - (totalDiffHoursBefore * 60)));
 
             }
             let totalHours = totalDiffHoursAfter + totalDiffHoursBefore;
             let totalMinutes = totalDifMinutesAfter + totalDifMinutesBefore;
-            console.log(totalHours,totalMinutes );
-            
+            //console.log(totalHours,totalMinutes );
+
+        })
+    },
+    calcSundayOverTime: (historyTechnical: any) => {
+
+        return historyTechnical.map((registry: any) => {
+            let hoursWorkedSunday = 0;
+            const { dateInit, dateEnd } = registry
+            const dateInitFormat = moment(dateInit, 'DD/MM/YYYY HH:mm:ss');
+            const dateEndFormat = moment(dateEnd, 'DD/MM/YYYY HH:mm:ss');
+            const dayOfTheWeek = moment(dateInitFormat).format('dddd');
+            if (dayOfTheWeek === 'Sunday') {
+                console.log('es domingo');
+                hoursWorkedSunday = dateEndFormat.diff(dateInitFormat, 'hours');
+            }
+            console.log(hoursWorkedSunday);
+            return hoursWorkedSunday;
         })
     }
 
