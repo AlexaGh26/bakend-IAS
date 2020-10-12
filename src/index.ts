@@ -3,23 +3,23 @@ const app = express();
 const PORT = 3001;
 import * as bodyParser from "body-parser";
 const fs = require('fs');
-import { serviceInformationModel } from './models/serviceInformation'
+import { save } from './middleware/inserService';
+import { calculateHours } from './middleware/calculateHours'
 
 const db: Array<object> = JSON.parse(fs.readFileSync('./database.json', 'utf8'));
 
 app.use(bodyParser.json());
 
 app.post('/form', (req: any, res: any) => {
-  let body: serviceInformationModel = req.body;
-  db.push(body)
-  let json = JSON.stringify(db);
-  fs.writeFileSync('./database.json', json, 'utf8');
-  res.send('200 Created correctly')
+  save.saveNewService( req , res)
 })
 
-app.get('/consult', (req: any, res: any) => {
-
-  res.send()
+app.get('/consult/:idTechnical/:week', async (req: any, res: any) => {
+  const { idTechnical, week } = req.params;
+  console.log(idTechnical, week)
+  let historyTechnical = db.filter((service: any) => service.idTechnical.toString() === idTechnical.toString())
+  let resConsult = await calculateHours.calculate(historyTechnical);
+  res.send(resConsult)
 })
 
 app.listen(PORT, () => {

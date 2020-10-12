@@ -1,4 +1,4 @@
-export interface serviceInformationModel {
+export interface servInformationModel {
     idTechnical: string,
     dateInit: string,
     dateEnd: string,
