@@ -20,7 +20,7 @@ export const save = {
         db.push(bodyFormat)
         let json = JSON.stringify(db);
         fs.writeFileSync('./database.json', json, 'utf8');
-        res.send("Created correctly")
+        res.send()
     },
 };
 

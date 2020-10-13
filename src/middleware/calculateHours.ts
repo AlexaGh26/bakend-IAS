@@ -7,6 +7,7 @@ export const calculateHours = {
     calculate: (historyTechnical: any, week: number) => {
         const rangeFrom = moment('2020').add(week, 'weeks').startOf('isoweek').format(dateFormat);
         const rangeTo = moment(rangeFrom, dateFormat).add(6, 'days').format(dateFormat);
+        
         historyTechnical = historyTechnical.filter((item: any) => {
             return (
                 moment(item.dateInit, dateFormat).isSameOrAfter(moment(rangeFrom, dateFormat).set({ "hour": 23, "minute": 59 }))
@@ -14,8 +15,8 @@ export const calculateHours = {
                 && moment(item.dateEnd, dateFormat).isSameOrAfter(moment(rangeFrom, dateFormat).set({ "hour": 23, "minute": 59 }))
                 && moment(item.dateEnd, dateFormat).isSameOrBefore(moment(rangeTo, dateFormat).set({ "hour": 23, "minute": 59 }))
         })
-        if (!!historyTechnical) {
-            return 'The technician did not work that week, please find another';
+        if (!historyTechnical.length) {
+            return [{ validation: 0, message:'The technician did not work that week, please find another'}];
         } else {
             let resultCalculations: any = [];
             let totalHours = 0;
@@ -39,7 +40,6 @@ export const calculateHours = {
                 }
             })
             let totalHoursExtra = (totalNightOvertime + hoursSunday + sundayNightExtraHours);
-            console.log(totalHours, totalHoursExtra);
 
             normalHours = totalHours - totalHoursExtra;
 
@@ -52,7 +52,7 @@ export const calculateHours = {
                 normalHours: normalHours,
                 dateInit: rangeFrom,
                 dateEnd: rangeTo,
-                resultConsult: historyTechnical
+                validation: 1
             }
             resultCalculations.push(objectInformation);
             return resultCalculations;
@@ -110,7 +110,6 @@ export const calculateHours = {
     calcSundayOverTime: (dateInitFormat: any, dateEndFormat: any) => {
         let hoursWorkedSunday = 0;
         hoursWorkedSunday = dateEndFormat.diff(dateInitFormat, 'hours');
-        //console.log(hoursWorkedSunday);
         return hoursWorkedSunday;
     }
 };
