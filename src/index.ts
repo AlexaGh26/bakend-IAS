@@ -18,7 +18,7 @@ app.get('/consult/:idTechnical/:week', (req: any, res: any) => {
   const { idTechnical, week } = req.params;
   //console.log(idTechnical, week)
   let historyTechnical = db.filter((service: any) => service.idTechnical.toString() === idTechnical.toString())
-  let resConsult = calculateHours.calculate(historyTechnical);
+  let resConsult = calculateHours.calculate(historyTechnical, week);
   res.send(resConsult)
 })
 

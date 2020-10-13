@@ -1,14 +1,26 @@
 const fs = require('fs');
 const moment = require('moment');
 const db: Array<object> = JSON.parse(fs.readFileSync('./database.json', 'utf8'));
+const dateFormat = 'DD/MM/YYYY HH:mm:ss';
 
 export const calculateHours = {
-    calculate: (historyTechnical: any) => {
+    calculate: (historyTechnical: any, week: number) => {
+        const rangeFrom = moment('2020').add(week, 'weeks').startOf('isoweek').format(dateFormat);
+        const rangeTo = moment(rangeFrom, dateFormat).add(6, 'days').format(dateFormat);
+        historyTechnical = historyTechnical.filter((item: any) => {
+            return (
+            moment(item.dateInit, dateFormat).isSameOrAfter(moment(rangeFrom, dateFormat).set({"hour": 23, "minute": 59})) 
+            && moment(item.dateInit, dateFormat).isSameOrBefore(moment(rangeTo, dateFormat).set({"hour": 23, "minute": 59}))) 
+            && moment(item.dateEnd, dateFormat).isSameOrAfter(moment(rangeFrom, dateFormat).set({"hour": 23, "minute": 59})) 
+            && moment(item.dateEnd, dateFormat).isSameOrBefore(moment(rangeTo, dateFormat).set({"hour": 23, "minute": 59})) 
+        })
+        
         let resultCalculations: any = [];
         let totalHours = 0;
         let totalNightOvertime = 0;
         let sundayNightExtraHours = 0
         let hoursSunday = 0;
+        let normalHours = 0;
         let objectInformation = {};
         historyTechnical.map((registry: any, index: any) => {
             const { dateInit, dateEnd } = registry
@@ -24,14 +36,18 @@ export const calculateHours = {
                 totalNightOvertime = totalNightOvertime + calculateHours.HoursExtraNight(dateInitFormat, dateEndFormat, dateInit, dateEnd);
             }
         })
-        let totalHoursExtra = totalHours - 48;
-        console.log(totalHours);
+        let totalHoursExtra = ( totalNightOvertime + hoursSunday + sundayNightExtraHours);
+        console.log(totalHours,totalHoursExtra);
+        
+        normalHours = totalHours - totalHoursExtra; 
+
         objectInformation = {
             HoursWorkedWeek : totalHours,
             totalExtraHours : totalHoursExtra,
             totalHoursExtraNight: totalNightOvertime,
             totalSundayHours: hoursSunday,
             sundayNightExtraHours: sundayNightExtraHours,
+            normalHours: normalHours
         }
         resultCalculations.push(objectInformation);
         return resultCalculations;
