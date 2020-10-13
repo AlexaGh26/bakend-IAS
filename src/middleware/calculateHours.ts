@@ -14,7 +14,6 @@ export const calculateHours = {
             && moment(item.dateEnd, dateFormat).isSameOrAfter(moment(rangeFrom, dateFormat).set({"hour": 23, "minute": 59})) 
             && moment(item.dateEnd, dateFormat).isSameOrBefore(moment(rangeTo, dateFormat).set({"hour": 23, "minute": 59})) 
         })
-        
         let resultCalculations: any = [];
         let totalHours = 0;
         let totalNightOvertime = 0;
@@ -108,4 +107,5 @@ export const calculateHours = {
         return hoursWorkedSunday;
     }
 };
+
 
