@@ -9,47 +9,54 @@ export const calculateHours = {
         const rangeTo = moment(rangeFrom, dateFormat).add(6, 'days').format(dateFormat);
         historyTechnical = historyTechnical.filter((item: any) => {
             return (
-            moment(item.dateInit, dateFormat).isSameOrAfter(moment(rangeFrom, dateFormat).set({"hour": 23, "minute": 59})) 
-            && moment(item.dateInit, dateFormat).isSameOrBefore(moment(rangeTo, dateFormat).set({"hour": 23, "minute": 59}))) 
-            && moment(item.dateEnd, dateFormat).isSameOrAfter(moment(rangeFrom, dateFormat).set({"hour": 23, "minute": 59})) 
-            && moment(item.dateEnd, dateFormat).isSameOrBefore(moment(rangeTo, dateFormat).set({"hour": 23, "minute": 59})) 
+                moment(item.dateInit, dateFormat).isSameOrAfter(moment(rangeFrom, dateFormat).set({ "hour": 23, "minute": 59 }))
+                && moment(item.dateInit, dateFormat).isSameOrBefore(moment(rangeTo, dateFormat).set({ "hour": 23, "minute": 59 })))
+                && moment(item.dateEnd, dateFormat).isSameOrAfter(moment(rangeFrom, dateFormat).set({ "hour": 23, "minute": 59 }))
+                && moment(item.dateEnd, dateFormat).isSameOrBefore(moment(rangeTo, dateFormat).set({ "hour": 23, "minute": 59 }))
         })
-        let resultCalculations: any = [];
-        let totalHours = 0;
-        let totalNightOvertime = 0;
-        let sundayNightExtraHours = 0
-        let hoursSunday = 0;
-        let normalHours = 0;
-        let objectInformation = {};
-        historyTechnical.map((registry: any, index: any) => {
-            const { dateInit, dateEnd } = registry
-            const dateInitFormat = moment(dateInit, 'DD/MM/YYYY HH:mm:ss');
-            const dateEndFormat = moment(dateEnd, 'DD/MM/YYYY HH:mm:ss');
-            const dayOfTheWeek = moment(dateInitFormat).format('dddd');
+        if (!!historyTechnical) {
+            return 'The technician did not work that week, please find another';
+        } else {
+            let resultCalculations: any = [];
+            let totalHours = 0;
+            let totalNightOvertime = 0;
+            let sundayNightExtraHours = 0
+            let hoursSunday = 0;
+            let normalHours = 0;
+            let objectInformation = {};
+            historyTechnical.map((registry: any, index: any) => {
+                const { dateInit, dateEnd } = registry
+                const dateInitFormat = moment(dateInit, 'DD/MM/YYYY HH:mm:ss');
+                const dateEndFormat = moment(dateEnd, 'DD/MM/YYYY HH:mm:ss');
+                const dayOfTheWeek = moment(dateInitFormat).format('dddd');
 
-            if (dayOfTheWeek === 'Sunday') {
-                hoursSunday = hoursSunday + calculateHours.calcSundayOverTime(dateInitFormat, dateEndFormat);
-                sundayNightExtraHours = sundayNightExtraHours + calculateHours.HoursExtraNight(dateInitFormat, dateEndFormat, dateInit, dateEnd);
-            } else {
-                totalHours = totalHours + calculateHours.totalHours(dateInitFormat, dateEndFormat, historyTechnical, index);
-                totalNightOvertime = totalNightOvertime + calculateHours.HoursExtraNight(dateInitFormat, dateEndFormat, dateInit, dateEnd);
+                if (dayOfTheWeek === 'Sunday') {
+                    hoursSunday = hoursSunday + calculateHours.calcSundayOverTime(dateInitFormat, dateEndFormat);
+                    sundayNightExtraHours = sundayNightExtraHours + calculateHours.HoursExtraNight(dateInitFormat, dateEndFormat, dateInit, dateEnd);
+                } else {
+                    totalHours = totalHours + calculateHours.totalHours(dateInitFormat, dateEndFormat, historyTechnical, index);
+                    totalNightOvertime = totalNightOvertime + calculateHours.HoursExtraNight(dateInitFormat, dateEndFormat, dateInit, dateEnd);
+                }
+            })
+            let totalHoursExtra = (totalNightOvertime + hoursSunday + sundayNightExtraHours);
+            console.log(totalHours, totalHoursExtra);
+
+            normalHours = totalHours - totalHoursExtra;
+
+            objectInformation = {
+                HoursWorkedWeek: totalHours,
+                totalExtraHours: totalHoursExtra,
+                totalHoursExtraNight: totalNightOvertime,
+                totalSundayHours: hoursSunday,
+                sundayNightExtraHours: sundayNightExtraHours,
+                normalHours: normalHours,
+                dateInit: rangeFrom,
+                dateEnd: rangeTo,
+                resultConsult: historyTechnical
             }
-        })
-        let totalHoursExtra = ( totalNightOvertime + hoursSunday + sundayNightExtraHours);
-        console.log(totalHours,totalHoursExtra);
-        
-        normalHours = totalHours - totalHoursExtra; 
-
-        objectInformation = {
-            HoursWorkedWeek : totalHours,
-            totalExtraHours : totalHoursExtra,
-            totalHoursExtraNight: totalNightOvertime,
-            totalSundayHours: hoursSunday,
-            sundayNightExtraHours: sundayNightExtraHours,
-            normalHours: normalHours
+            resultCalculations.push(objectInformation);
+            return resultCalculations;
         }
-        resultCalculations.push(objectInformation);
-        return resultCalculations;
     },
     totalHours: (dateInitFormat: any, dateEndFormat: any, historyTechnical: any, index: number) => {
         let totaHours = 0;

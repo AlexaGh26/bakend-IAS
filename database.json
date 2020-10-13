@@ -1,10 +1,10 @@
-[{"idTechnical":109621, "week": 2},
-    {"idTechnical":15555, "week": 4},
-    {"idTechnical":109534,"week": 2 , "dateInit": "11/03/2020 07:00:00", "dateEnd": "11/03/2020 21:20:00"},
-    {"idTechnical":109534,"week": 2 , "dateInit": "12/03/2020 07:00:00", "dateEnd": "12/03/2020 18:20:00"},
-    {"idTechnical":109534,"week": 2 , "dateInit": "13/03/2020 04:30:00", "dateEnd": "13/03/2020 21:00:00"},
-    {"idTechnical":109534,"week": 2 , "dateInit": "14/03/2020 07:00:00", "dateEnd": "14/03/2020 16:30:00"},
-    {"idTechnical":109534,"week": 2 , "dateInit": "15/03/2020 07:00:00", "dateEnd": "15/03/2020 22:10:00"},
-    {"idTechnical":109534,"week": 2 , "dateInit": "16/03/2020 07:00:00", "dateEnd": "16/03/2020 20:30:00"},
-    {"idTechnical":109534,"week": 2 , "dateInit": "17/03/2020 07:00:00", "dateEnd": "17/03/2020 21:00:00"}
-]
+[{"idTechnical":109621},
+    {"idTechnical":15555},
+    {"idTechnical":109534,"dateInit":"11/03/2020 07:00:00","dateEnd":"11/03/2020 21:20:00"},
+    {"idTechnical":109534,"dateInit":"12/03/2020 07:00:00","dateEnd":"12/03/2020 18:20:00"},
+    {"idTechnical":109534,"dateInit":"13/03/2020 04:30:00","dateEnd":"13/03/2020 21:00:00"},
+    {"idTechnical":109534,"dateInit":"14/03/2020 07:00:00","dateEnd":"14/03/2020 16:30:00"},
+    {"idTechnical":109534,"dateInit":"15/03/2020 07:00:00","dateEnd":"15/03/2020 22:10:00"},
+    {"idTechnical":109534,"dateInit":"16/03/2020 07:00:00","dateEnd":"16/03/2020 20:30:00"},
+    {"idTechnical":109534,"dateInit":"17/03/2020 07:00:00","dateEnd":"17/03/2020 21:00:00"},
+   {"idTechnical":1096216333,"dateInit":"13/10/2020 07:00:00","dateEnd":"13/10/2020 16:00:00","typeService":"Technical Service"}]

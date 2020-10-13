@@ -1,5 +1,5 @@
 export interface servInformationModel {
-    idTechnical: string,
+    idTechnical: number,
     dateInit: string,
     dateEnd: string,
     typeService : string,

@@ -9,19 +9,18 @@ export const save = {
         const {dateInit, hoursInit, dateEnd, hoursEnd, registrationNumber, typeService} = req.body;
 
         const db: Array<object> = JSON.parse(fs.readFileSync('./database.json', 'utf8'));
-        
-        const dateInitialSumHour = moment(dateInit, dateFormat).add(hoursInit, 'hours').format(dateFormat);
-        const dateFinalSumHour = moment(dateInit, dateFormat).add(hoursInit, 'hours').format(dateFormat);
-        let body: servInformationModel = {
-            idTechnical: registrationNumber,
-            dateInit: dateInitialSumHour,
-            dateEnd: dateFinalSumHour,
-            typeService : typeService,
+        const dateInitialSumHour = moment(dateInit).add(hoursInit, 'hours').format(dateFormat);
+        const dateFinalSumHour = moment(dateEnd).add(hoursEnd, 'hours').format(dateFormat);
+        let bodyFormat: servInformationModel = {
+            "idTechnical": Number(registrationNumber),
+            "dateInit": dateInitialSumHour,
+            "dateEnd": dateFinalSumHour,
+            "typeService" : typeService,
         };
-        db.push(body)
+        db.push(bodyFormat)
         let json = JSON.stringify(db);
         fs.writeFileSync('./database.json', json, 'utf8');
-        res.send('Created correctly')
+        res.send("Created correctly")
     },
 };
 
